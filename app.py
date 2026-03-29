@@ -78,8 +78,11 @@ st.dataframe(df.head())
 st.subheader("📊 Fraud vs Safe Distribution")
 
 fig1 = plt.figure()
-df["Fraud"].value_counts().plot(kind="bar")
-plt.title("Fraud vs Safe")
+ax1 = fig1.add_subplot(111)
+df["Fraud"].value_counts().plot(kind="bar", ax=ax1)
+ax1.set_title("Fraud vs Safe")
+ax1.set_xlabel("Class")
+ax1.set_ylabel("Count")
 st.pyplot(fig1)
 
 # -----------------------------
@@ -88,20 +91,29 @@ st.pyplot(fig1)
 st.subheader("📊 Transaction Amount Distribution")
 
 fig2 = plt.figure()
-plt.hist(df["Amount"])
-plt.xlabel("Amount")
-plt.ylabel("Frequency")
+ax2 = fig2.add_subplot(111)
+ax2.hist(df["Amount"])
+ax2.set_title("Amount Distribution")
+ax2.set_xlabel("Amount")
+ax2.set_ylabel("Frequency")
 st.pyplot(fig2)
 
 # -----------------------------
-# BOXPLOT (VERY IMPORTANT FOR ANALYSIS)
+# BOXPLOT
 # -----------------------------
 st.subheader("📊 Amount vs Fraud (Boxplot)")
 
 fig_box = plt.figure()
-df.boxplot(column="Amount", by="Fraud")
-plt.title("Amount vs Fraud")
+ax_box = fig_box.add_subplot(111)
+
+df.boxplot(column="Amount", by="Fraud", ax=ax_box)
+
+ax_box.set_title("Amount vs Fraud")
 plt.suptitle("")
+ax_box.set_xlabel("Fraud (0 = Safe, 1 = Fraud)")
+ax_box.set_ylabel("Transaction Amount")
+ax_box.grid(True)
+
 st.pyplot(fig_box)
 
 # -----------------------------
@@ -110,9 +122,17 @@ st.pyplot(fig_box)
 st.subheader("📊 Correlation Matrix")
 
 fig_corr = plt.figure()
-plt.imshow(df.corr())
-plt.title("Correlation Matrix")
-plt.colorbar()
+ax_corr = fig_corr.add_subplot(111)
+
+cax = ax_corr.imshow(df.corr())
+fig_corr.colorbar(cax)
+
+ax_corr.set_title("Correlation Matrix")
+ax_corr.set_xticks(range(len(df.columns)))
+ax_corr.set_yticks(range(len(df.columns)))
+ax_corr.set_xticklabels(df.columns, rotation=45)
+ax_corr.set_yticklabels(df.columns)
+
 st.pyplot(fig_corr)
 
 # -----------------------------
@@ -122,17 +142,21 @@ st.subheader("📊 Confusion Matrix")
 
 cm = confusion_matrix(y_true, y_pred)
 
-fig3 = plt.figure()
-plt.imshow(cm)
-plt.title("Confusion Matrix")
-plt.xlabel("Predicted")
-plt.ylabel("Actual")
+fig_cm = plt.figure()
+ax_cm = fig_cm.add_subplot(111)
+
+cax2 = ax_cm.imshow(cm)
+fig_cm.colorbar(cax2)
+
+ax_cm.set_title("Confusion Matrix")
+ax_cm.set_xlabel("Predicted")
+ax_cm.set_ylabel("Actual")
 
 for i in range(len(cm)):
     for j in range(len(cm[0])):
-        plt.text(j, i, cm[i][j], ha="center", va="center")
+        ax_cm.text(j, i, cm[i][j], ha="center", va="center")
 
-st.pyplot(fig3)
+st.pyplot(fig_cm)
 
 # -----------------------------
 # ROC CURVE
@@ -145,15 +169,17 @@ fpr, tpr, _ = roc_curve(y_true, y_prob)
 roc_auc = auc(fpr, tpr)
 
 fig4 = plt.figure()
-plt.plot(fpr, tpr)
-plt.title(f"ROC Curve (AUC = {round(roc_auc,3)})")
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
+ax4 = fig4.add_subplot(111)
+
+ax4.plot(fpr, tpr)
+ax4.set_title(f"ROC Curve (AUC = {round(roc_auc,3)})")
+ax4.set_xlabel("False Positive Rate")
+ax4.set_ylabel("True Positive Rate")
 
 st.pyplot(fig4)
 
 # -----------------------------
-# FEATURE IMPORTANCE (PRO LEVEL)
+# FEATURE IMPORTANCE
 # -----------------------------
 st.subheader("📊 Feature Importance")
 
@@ -161,9 +187,13 @@ importance = model.feature_importances_
 features = X.columns
 
 fig5 = plt.figure()
-plt.barh(features, importance)
-plt.xlabel("Importance")
-plt.ylabel("Features")
+ax5 = fig5.add_subplot(111)
+
+ax5.barh(features, importance)
+ax5.set_title("Feature Importance")
+ax5.set_xlabel("Importance")
+ax5.set_ylabel("Features")
+
 st.pyplot(fig5)
 
 # -----------------------------
