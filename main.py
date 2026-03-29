@@ -1,79 +1,94 @@
 import pandas as pd
 import numpy as np
 import random
+import joblib
 
-# ML Libraries
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
+from sklearn.metrics import (
+    accuracy_score,
+    mean_squared_error,
+    classification_report,
+    confusion_matrix
+)
 
 # -----------------------------
-# STEP 1: CREATE DATA
+# REPRODUCIBILITY
 # -----------------------------
+random.seed(42)
+np.random.seed(42)
 
+# -----------------------------
+# DATA GENERATION (REALISTIC)
+# -----------------------------
 data = []
 
-for i in range(200):
+for _ in range(1000):
     amount = random.randint(10, 100000)
     hour = random.randint(0, 23)
 
-    fraud = 0
-
-    # Strong fraud condition
-    if amount > 70000 and hour < 5:
+    if amount > 80000 and hour < 6:
         fraud = 1
-
-    # Add random fraud cases
-    elif random.random() < 0.1:
+    elif amount > 60000 and hour < 3:
         fraud = 1
+    elif random.random() < 0.05:
+        fraud = 1
+    else:
+        fraud = 0
 
     data.append([amount, hour, fraud])
 
 df = pd.DataFrame(data, columns=["Amount", "Hour", "Fraud"])
 
 # -----------------------------
-# STEP 2: FEATURE ENGINEERING
+# FEATURE ENGINEERING
 # -----------------------------
-
 df["High_Amount"] = (df["Amount"] > 50000).astype(int)
 df["Night"] = (df["Hour"] < 5).astype(int)
+df["Very_High"] = (df["Amount"] > 80000).astype(int)
+df["Early_Morning"] = (df["Hour"] < 3).astype(int)
 
-df["Risk"] = df["High_Amount"] & df["Night"]
-
-print("\nSample Data:\n")
-print(df.head())
-
-print("\nDetected Risk Transactions:\n")
-print(df[df["Risk"] == 1])
-
-# -----------------------------
-# STEP 3: MACHINE LEARNING
-# -----------------------------
-
-X = df[["Amount", "High_Amount", "Night"]]
+X = df[["Amount", "High_Amount", "Night", "Very_High", "Early_Morning"]]
 y = df["Fraud"]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# -----------------------------
+# TRAIN / TEST SPLIT
+# -----------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
-model = RandomForestClassifier()
+# -----------------------------
+# MODEL
+# -----------------------------
+model = RandomForestClassifier(
+    n_estimators=200,
+    max_depth=10,
+    random_state=42
+)
+
 model.fit(X_train, y_train)
 
+# -----------------------------
+# EVALUATION
+# -----------------------------
 y_pred = model.predict(X_test)
 
-print("\nModel Performance:\n")
+accuracy = accuracy_score(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred)
+
+print("\n===== MODEL PERFORMANCE =====")
+print("Accuracy:", accuracy)
+print("Mean Squared Error:", mse)
+print("\nConfusion Matrix:\n", cm)
+print("\nClassification Report:\n")
 print(classification_report(y_test, y_pred))
 
 # -----------------------------
-# STEP 4: TEST NEW TRANSACTION
+# SAVE OUTPUTS
 # -----------------------------
+df.to_csv("data.csv", index=False)
+joblib.dump(model, "model.pkl")
 
-sample = pd.DataFrame([{
-    "Amount": 80000,
-    "High_Amount": 1,
-    "Night": 1
-}])
-
-prediction = model.predict(sample)
-
-print("\nNew Transaction Check:")
-print("⚠️ Fraud" if prediction[0] == 1 else "✅ Safe")
+print("\nSaved: data.csv and model.pkl")

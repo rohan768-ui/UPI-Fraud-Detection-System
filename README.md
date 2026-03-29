@@ -1,77 +1,82 @@
-# 🚨 UPI Fraud Detection System
+# UPI Fraud Detection System
 
-## 📌 Project Overview
+# About the Project
 
-This project detects suspicious UPI transactions using data analysis and machine learning. It analyzes transaction amount and time to identify potential fraud and shows risk using a simple web application.
+This project is a simple UPI Fraud Detection System built using Python and machine learning.
+The main idea is to analyze transaction details like amount and time, and predict whether a transaction is safe or fraudulent.
 
----
+Instead of using a real dataset, I created a sample dataset to simulate real-world transactions and applied a machine learning model on top of it.
 
-## 🎯 Objective
+# What this project 
 
-* Detect high-risk transactions
-* Analyze transaction patterns
-* Use machine learning to identify possible fraud
-* Provide real-time fraud checking through a web interface
+Generates transaction data (amount, time, fraud status)
+Applies logic to detect risky transactions
+Trains a machine learning model (Random Forest)
+Predicts whether a transaction is safe or fraud
+Shows results using a simple web interface
+Displays graphs and performance metrics
 
----
+# Features
 
-## 🛠️ Technologies Used
+User can enter amount and time to check a transaction
+Fraud detection based on trained model
+Accuracy and model evaluation
+Confusion matrix and ROC curve
+Graphs for data visualization
+Option to download dataset
 
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* Streamlit
+# Technologies Used
 
----
+Python
+Pandas
+NumPy
+Scikit-learn
+Matplotlib
+Streamlit
+# How to Run the Project
 
-## ⚙️ Features
-
-* Generates transaction data
-* Identifies high-risk patterns
-* Uses a Random Forest model for prediction
-* Interactive web interface to check transactions
-
----
-
-## ▶️ How to Run
-
-### 1. Install dependencies
-
-```bash
+Install required libraries:
 pip install -r requirements.txt
-```
-
-### 2. Run the main program
-
-```bash
+Run the main file (this will generate data and train the model):
 python main.py
-```
-
-### 3. Run the web app
-
-```bash
+Run the web app:
 streamlit run app.py
-```
-
-### 4. Open in browser
-
-```
+Open your browser and go to:
 http://localhost:8501
-```
 
-⚠️ Note: This link works only on the local machine where the app is running.
+# Project Structure
 
----
+UPI_Fraud_Project/
+│── main.py
+│── app.py
+│── data.csv
+│── model.pkl
+│── requirements.txt
+│── README.md
 
-## 📊 Output
+# Model Details
 
-* Identifies risky transactions
-* Classifies transaction as safe or potential fraud
-* Displays results through a web app
+The model used is Random Forest Classifier.
+It takes inputs like:
 
----
+Transaction amount
+Whether the amount is high
+Whether the transaction is at night
+Other derived features
 
-## 👨‍💻 Author
+Based on these, it predicts whether the transaction is fraudulent or not.
+
+# Future Improvements
+Use real transaction data
+Improve model accuracy
+Add more features (like location, device info)
+Deploy the project online
+
+# Author
 
 Rohan Das
+
+# Final Note
+
+This project helped me understand how machine learning can be used in real-life problems like fraud detection.
+It combines data analysis, model building, and a simple user interface.
