@@ -1,50 +1,78 @@
 # UPI Fraud Detection System
 
-# About the Project
+## About the Project
 
-This project is a simple UPI Fraud Detection System built using Python and machine learning.
-The main idea is to analyze transaction details like amount and time, and predict whether a transaction is safe or fraudulent.
+This project is based on **Data Analysis using Python**.
+The main goal is to analyze UPI transaction data and understand patterns of fraudulent activities.
 
-Instead of using a real dataset, I created a sample dataset to simulate real-world transactions and applied a machine learning model on top of it.
+In this project, I first performed data analysis and visualization to study the dataset, and then applied a machine learning model to predict fraud.
 
-# What this project 
+## Objective
 
-Generates transaction data (amount, time, fraud status)
-Applies logic to detect risky transactions
-Trains a machine learning model (Random Forest)
-Predicts whether a transaction is safe or fraud
-Shows results using a simple web interface
-Displays graphs and performance metrics
+* To analyze transaction data
+* To identify patterns in fraudulent transactions
+* To visualize important insights
+* To build a model that predicts fraud
 
-# Features
+## What this project includes
 
-User can enter amount and time to check a transaction
-Fraud detection based on trained model
-Accuracy and model evaluation
-Confusion matrix and ROC curve
-Graphs for data visualization
-Option to download dataset
+### 1. Data Generation
 
-# Technologies Used
+A dataset of UPI transactions is generated with:
 
-Python
-Pandas
-NumPy
-Scikit-learn
-Matplotlib
-Streamlit
-# How to Run the Project
+* Transaction amount
+* Transaction hour
+* Fraud status
 
-Install required libraries:
-pip install -r requirements.txt
-Run the main file (this will generate data and train the model):
-python main.py
-Run the web app:
-streamlit run app.py
-Open your browser and go to:
-http://localhost:8501
+### 2. Data Analysis
 
-# Project Structure
+I performed **Exploratory Data Analysis (EDA)**, including:
+
+* Statistical summary (mean, max, min)
+* Fraud vs safe transaction count
+* Correlation between features
+* Group analysis (fraud by amount and time)
+
+### 3. Data Visualization
+
+The following graphs are used:
+
+* Bar chart (Fraud vs Safe)
+* Histogram (Amount distribution)
+* Boxplot (Amount vs Fraud)
+* Scatter plot (Hour vs Amount)
+* Correlation matrix
+
+### 4. Machine Learning
+
+* Algorithm: Random Forest Classifier
+* Purpose: Predict whether a transaction is fraud or safe
+
+### 5. Model Evaluation
+
+* Accuracy
+* Confusion Matrix
+* ROC Curve (AUC)
+* Mean Squared Error
+
+### 6. Interactive Dashboard
+
+A web app is created using Streamlit where:
+
+* User can input amount and time
+* System predicts fraud in real-time
+* Graphs and analysis are displayed
+
+## Technologies Used
+
+* Python
+* Pandas
+* NumPy
+* Matplotlib
+* Scikit-learn
+* Streamlit
+
+## Project Structure
 
 UPI_Fraud_Project/
 │── main.py
@@ -54,29 +82,41 @@ UPI_Fraud_Project/
 │── requirements.txt
 │── README.md
 
-# Model Details
+## How to Run
 
-The model used is Random Forest Classifier.
-It takes inputs like:
+### 1. Install dependencies
 
-Transaction amount
-Whether the amount is high
-Whether the transaction is at night
-Other derived features
+pip install -r requirements.txt
 
-Based on these, it predicts whether the transaction is fraudulent or not.
+### 2. Run data analysis and model
 
-# Future Improvements
-Use real transaction data
-Improve model accuracy
-Add more features (like location, device info)
-Deploy the project online
+python main.py
 
-# Author
+### 3. Run the dashboard
+
+streamlit run app.py
+
+### 4. Open in browser
+
+http://localhost:8501
+
+## Key Insights
+
+* Fraud transactions usually have higher amounts
+* Fraud is more common during late night / early morning
+* Patterns can be identified through data analysis
+
+## Future Improvements
+
+* Use real-world dataset
+* Improve model accuracy
+* Add more features like location or device info
+* Deploy the system online
+
+## Author
 
 Rohan Das
 
-# Final Note
+## Final Note
 
-This project helped me understand how machine learning can be used in real-life problems like fraud detection.
-It combines data analysis, model building, and a simple user interface.
+This project helped me understand how data analysis and machine learning can be combined to solve real-world problems like fraud detection.

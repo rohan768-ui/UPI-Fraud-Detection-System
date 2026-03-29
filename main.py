@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import random
 import joblib
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -48,6 +49,70 @@ df["Night"] = (df["Hour"] < 5).astype(int)
 df["Very_High"] = (df["Amount"] > 80000).astype(int)
 df["Early_Morning"] = (df["Hour"] < 3).astype(int)
 
+# -----------------------------
+# ===== EXPLORATORY DATA ANALYSIS =====
+# -----------------------------
+print("\n===== BASIC DATA ANALYSIS =====")
+
+print("\nDataset Shape:", df.shape)
+
+print("\nFirst 5 rows:")
+print(df.head())
+
+print("\nStatistical Summary:")
+print(df.describe())
+
+print("\nFraud vs Safe count:")
+print(df["Fraud"].value_counts())
+
+# -----------------------------
+# CORRELATION ANALYSIS
+# -----------------------------
+print("\n===== CORRELATION MATRIX =====")
+print(df.corr())
+
+# -----------------------------
+# GROUP ANALYSIS
+# -----------------------------
+print("\n===== GROUP ANALYSIS =====")
+
+print("\nAverage Amount by Fraud:")
+print(df.groupby("Fraud")["Amount"].mean())
+
+print("\nFraud count by Hour:")
+print(df.groupby("Hour")["Fraud"].sum())
+
+# -----------------------------
+# VISUAL ANALYSIS
+# -----------------------------
+print("\nGenerating visual analysis plots...")
+
+# Histogram
+plt.figure()
+plt.hist(df["Amount"])
+plt.title("Transaction Amount Distribution")
+plt.xlabel("Amount")
+plt.ylabel("Frequency")
+plt.show()
+
+# Boxplot
+plt.figure()
+df.boxplot(column="Amount", by="Fraud")
+plt.title("Amount vs Fraud")
+plt.suptitle("")
+plt.show()
+
+# Scatter plot
+plt.figure()
+plt.scatter(df["Hour"], df["Amount"])
+plt.xlabel("Hour")
+plt.ylabel("Amount")
+plt.title("Hour vs Amount")
+plt.show()
+
+# -----------------------------
+# MODEL PREPARATION
+# -----------------------------
 X = df[["Amount", "High_Amount", "Night", "Very_High", "Early_Morning"]]
 y = df["Fraud"]
 
@@ -81,7 +146,9 @@ cm = confusion_matrix(y_test, y_pred)
 print("\n===== MODEL PERFORMANCE =====")
 print("Accuracy:", accuracy)
 print("Mean Squared Error:", mse)
+
 print("\nConfusion Matrix:\n", cm)
+
 print("\nClassification Report:\n")
 print(classification_report(y_test, y_pred))
 
@@ -91,4 +158,4 @@ print(classification_report(y_test, y_pred))
 df.to_csv("data.csv", index=False)
 joblib.dump(model, "model.pkl")
 
-print("\nSaved: data.csv and model.pkl")
+print("\nSaved: data.csv and model.pkl successfully") 

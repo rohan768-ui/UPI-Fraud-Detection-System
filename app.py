@@ -16,19 +16,18 @@ model = joblib.load("model.pkl")
 # -----------------------------
 st.set_page_config(page_title="UPI Fraud Detection", layout="wide")
 
-st.title("🚨 AI-Based UPI Fraud Detection System")
-
-st.markdown("""
-This system uses Machine Learning to detect suspicious UPI transactions.
-""")
+st.title("🚨 UPI Fraud Detection Dashboard")
+st.markdown("Data Analysis + Machine Learning based fraud detection system")
 
 # -----------------------------
 # USER INPUT
 # -----------------------------
 st.subheader("🔍 Check Transaction")
 
-amount = st.number_input("Enter Amount", min_value=0)
-hour = st.slider("Select Hour", 0, 23)
+colA, colB = st.columns(2)
+
+amount = colA.number_input("Enter Amount", min_value=0)
+hour = colB.slider("Select Hour", 0, 23)
 
 high_amount = 1 if amount > 50000 else 0
 night = 1 if hour < 5 else 0
@@ -63,8 +62,8 @@ y_pred = model.predict(X)
 accuracy = accuracy_score(y_true, y_pred)
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Total", len(df))
-col2.metric("Fraud", df["Fraud"].sum())
+col1.metric("Total Transactions", len(df))
+col2.metric("Fraud Cases", df["Fraud"].sum())
 col3.metric("Accuracy", round(accuracy, 3))
 
 # -----------------------------
@@ -74,22 +73,47 @@ st.subheader("📄 Dataset Preview")
 st.dataframe(df.head())
 
 # -----------------------------
-# BAR GRAPH
+# FRAUD DISTRIBUTION
 # -----------------------------
-st.subheader("📊 Fraud vs Safe")
+st.subheader("📊 Fraud vs Safe Distribution")
 
 fig1 = plt.figure()
 df["Fraud"].value_counts().plot(kind="bar")
+plt.title("Fraud vs Safe")
 st.pyplot(fig1)
 
 # -----------------------------
-# HISTOGRAM
+# AMOUNT DISTRIBUTION
 # -----------------------------
-st.subheader("📊 Amount Distribution")
+st.subheader("📊 Transaction Amount Distribution")
 
 fig2 = plt.figure()
 plt.hist(df["Amount"])
+plt.xlabel("Amount")
+plt.ylabel("Frequency")
 st.pyplot(fig2)
+
+# -----------------------------
+# BOXPLOT (VERY IMPORTANT FOR ANALYSIS)
+# -----------------------------
+st.subheader("📊 Amount vs Fraud (Boxplot)")
+
+fig_box = plt.figure()
+df.boxplot(column="Amount", by="Fraud")
+plt.title("Amount vs Fraud")
+plt.suptitle("")
+st.pyplot(fig_box)
+
+# -----------------------------
+# CORRELATION MATRIX
+# -----------------------------
+st.subheader("📊 Correlation Matrix")
+
+fig_corr = plt.figure()
+plt.imshow(df.corr())
+plt.title("Correlation Matrix")
+plt.colorbar()
+st.pyplot(fig_corr)
 
 # -----------------------------
 # CONFUSION MATRIX
@@ -127,6 +151,20 @@ plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
 
 st.pyplot(fig4)
+
+# -----------------------------
+# FEATURE IMPORTANCE (PRO LEVEL)
+# -----------------------------
+st.subheader("📊 Feature Importance")
+
+importance = model.feature_importances_
+features = X.columns
+
+fig5 = plt.figure()
+plt.barh(features, importance)
+plt.xlabel("Importance")
+plt.ylabel("Features")
+st.pyplot(fig5)
 
 # -----------------------------
 # DOWNLOAD
